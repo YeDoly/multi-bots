@@ -50,24 +50,20 @@ export default {
       this.$emit("sidebarToogle");
     },
     checkPerms: (perm) =>
-      new Promise(function (resolve, rej) {
-        fetch("http://localhost:3000/api/data/perms/" + perm).then((res) => {
+      new Promise(async (resolve) => {
+        const res = await fetch("http://localhost:3000/api/data/perms/" + perm)
           if (res.status === 200) {
-            res.json().then((json) => {
+            const json = await res.json();
               resolve(json.permissions);
-            });
           }
-        });
       }),
     checkServer: (server) =>
-      new Promise(function (resolve, rej) {
-        fetch("http://localhost:3000/api/data/server/" + server).then((res) => {
+      new Promise(async (resolve) => {
+        const res = await fetch("http://localhost:3000/api/data/server/" + server);
           if (res.status === 200) {
-            res.json().then((json) => {
+            const json = await res.json();
               resolve(json.is);
-            });
           }
-        });
       }),
     async getServers () {
         if (!this.$store.getters.getUser) return;
