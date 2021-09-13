@@ -1,0 +1,17 @@
+{
+  "name": "multi-bots",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {},
+  "dependencies": {
+    "connect-sqlite3": "^0.9.12",
+    "cors": "^2.8.5",
+    "discord.js": "^12.5.3",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "helmet": "^4.6.0",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4"
+  }
+}
