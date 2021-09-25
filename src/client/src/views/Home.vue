@@ -3,19 +3,21 @@
     class="btn btn-primary btn-dark"
     id="sidebar-show"
     type="button"
-    @click="sidebarShow"
+    @click="sidebarToogle"
   >
     <i class="fas fa-align-justify"></i>
   </button>
 </template>
 
 <script>
+import Sidebar from '@/composables/Sidebar'
+
 export default {
-  name: "Home",
-  methods: {
-    sidebarShow() {
-      this.$emit("sidebarToogle");
-    },
+  name: 'Home',
+  setup(props, {emit}) {
+    const {sidebarToogle} = Sidebar(emit)
+
+    return {sidebarToogle}
   },
-};
+}
 </script>

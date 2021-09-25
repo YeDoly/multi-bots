@@ -38,7 +38,7 @@
       class="server rounded-circle server-text"
       :title="`${item.name}`"
     >
-      {{ shorttext() }}
+      {{ generateName(item.name) }}
     </p>
   </router-link>
   <a v-else :href="generateLink({ path: item.id })">
@@ -49,12 +49,14 @@
       class="server rounded-circle server-text"
       :title="`${item.name}`"
     >
-      {{ shorttext() }}
+      {{ generateName(item.name) }}
     </p>
   </a>
 </template>
 
 <script>
+import Sidebar from '@/composables/Sidebar'
+
 export default {
   name: "Sidebar",
   props: {
@@ -63,25 +65,10 @@ export default {
           required: true
       }
   },
-  methods: {
-    shorttext() {
-      const args = this.item.name.split(/ +/g);
-      let text = args.map((name) => name[0]).join("");
-        
-      if (text.length < 4 && args.length > 1)
-        text = `${text[0]}${args
-          .map((name) => name.slice(1))[0]
-          .slice(0, 4 - text.length)}${text.slice(1)}`;
-        
-      if (text.length < 4) text = args.join("");
-      return text.slice(0, 4);
-    },
-    generateLink(guild) {
-      return (
-        "https://discord.com/oauth2/authorize?scope=bot&permissions=8&client_id=624272125762600985&guild_id=" +
-        guild
-      );
-    },
+  setup(props, { emit }) {    
+    const { generateLink, generateName } = Sidebar(emit)
+
+    return { generateLink, generateName }
   },
 };
 </script>

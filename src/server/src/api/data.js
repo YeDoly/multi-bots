@@ -1,40 +1,30 @@
-const express = require("express");
-const router = express.Router();
+/** @format */
 
-const { Permissions } = require("discord.js");
+const express = require('express')
+const router = express.Router()
 
-const permissionsArray = new Array([
-  "ADMINISTRATOR",
-  "MANAGE_GUILD",
-]);
+const {Permissions} = require('discord.js')
+
+const permissionsArray = new Array(['ADMINISTRATOR', 'MANAGE_GUILD'])
 
 module.exports = (client) => {
-  router.get("/perms/:perm", (req, res) => {
-    try {
-      res.status(200).json({
-        status: 200,
-        permissions: new Permissions(Number(req.params.perm)).any(permissionsArray),
-      });
-    } catch (e) {
-      res.status(400).json({
-        status: 400,
-        permissions: new Permissions(Number(req.params.perm)).any(permissionsArray),
-      });
-    }
-  });
-
-  router.get("/server/:guild", (req, res) => {
-    res
-      .status(200)
-      .json({ status: 200, is: !!client.guilds.cache.get(req.params.guild) });
-  });
-
-  router.get("/:user", (req, res) => {
+  router.get('/:user', (req, res) => {
     req.sessionStore.get(req.params.user, (err, sess) => {
-      if (err || !sess) res.status(401).json({ status: 401, user: null });
-      else res.status(200).json({ status: 200, user: sess.user });
-    });
-  });
+      if (err || !sess) res.status(401).json({status: 401, user: null})
+      else {
+        sess.user.guilds = sess.user.guilds
+          .filter((guild) =>
+            new Permissions(Number(guild.permissions)).any(permissionsArray)
+          )
+          .map((guild) => {
+            guild.is = !!client.guilds.cache.get(guild.id)
+            return guild
+          })
+          
+        res.status(200).json({status: 200, user: sess.user})
+      }
+    })
+  })
 
-  return router;
-};
+  return router
+}
